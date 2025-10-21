@@ -1,0 +1,35 @@
+package routers
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/radifan9/platform-tiket-bioskop/models"
+	"github.com/radifan9/platform-tiket-bioskop/utils"
+	"github.com/redis/go-redis/v9"
+)
+
+func InitRouter(db *pgxpool.Pool, rdb *redis.Client) *gin.Engine {
+	router := gin.Default()
+
+	// API Version 1
+	v1 := router.Group("/api/v1")
+	{
+		RegisterUserRoutes(v1, db, rdb)
+
+		// Static File Image
+		v1.Static("/img", "public")
+	}
+
+	// Catch all route
+	router.NoRoute(func(ctx *gin.Context) {
+		utils.HandleResponse(ctx, http.StatusNotFound, models.ErrorResponse{
+			Success: false,
+			Status:  http.StatusNotFound,
+			Error:   "Route does not exist",
+		})
+	})
+
+	return router
+}
