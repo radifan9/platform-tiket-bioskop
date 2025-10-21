@@ -17,6 +17,7 @@ func InitRouter(db *pgxpool.Pool, rdb *redis.Client) *gin.Engine {
 	v1 := router.Group("/api/v1")
 	{
 		RegisterUserRoutes(v1, db, rdb)
+		RegisterSchedulesRoutes(v1, db, rdb)
 
 		// Static File Image
 		v1.Static("/img", "public")

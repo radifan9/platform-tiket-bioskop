@@ -1,0 +1,110 @@
+{
+	"info": {
+		"_postman_id": "39170a2a-37d2-4814-ae97-dd68b539fb71",
+		"name": "Platform Tiket Bioskop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44839451",
+		"_collection_link": "https://radif-9698946.postman.co/workspace/Radif's-Workspace~c266325b-ae4b-4a16-8ad7-6234a09e3a08/collection/44839451-39170a2a-37d2-4814-ae97-dd68b539fb71?action=share&source=collection_link&creator=44839451"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"multi@gmail.com\",\n    \"password\": \"multisangar123(DF&&\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/auth/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"radif@gmail.com\",\n    \"password\": \"radifsangar123(DF&&\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Schedule",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:admin-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"city_id\": 2,\n  \"cinema_id\": 1,\n  \"movie_id\": 2,\n  \"start_at\": \"21:30\",\n  \"ticket_price\": 50000,\n  \"show_date\": \"2025-10-21\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/schedules",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"schedules"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

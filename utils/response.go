@@ -20,6 +20,6 @@ func HandleError(ctx *gin.Context, status int, message string, err string) {
 	ctx.JSON(status, models.ErrorResponse{
 		Success: false,
 		Status:  status,
-		Error:   err,
+		Error:   message,
 	})
 }

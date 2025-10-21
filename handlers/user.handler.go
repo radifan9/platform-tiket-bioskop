@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"regexp"
@@ -35,7 +36,7 @@ func (u *UserHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	// Hash password
+	// Hash password (contoh)
 	// "password": "ceganssangar123(DF&&"
 	// format : email + sangar123(DF&&
 	hashCfg := pkg.NewHashConfig()
@@ -53,14 +54,7 @@ func (u *UserHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	utils.HandleResponse(ctx, http.StatusOK, models.SuccessResponse{
-		Success: true,
-		Status:  http.StatusOK,
-		Data: gin.H{
-			"id":    newUser.Id,
-			"email": newUser.Email,
-		},
-	})
+	utils.HandleResponse(ctx, http.StatusOK, newUser)
 }
 
 func (u *UserHandler) Login(ctx *gin.Context) {
@@ -104,10 +98,8 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	}
 
 	if !isMatched {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"success": false,
-			"error":   "Nama atau Password salah",
-		})
+		err := fmt.Errorf("login failed: nama atau password salah")
+		utils.HandleError(ctx, http.StatusBadRequest, "nama atau password salah", err.Error())
 		return
 	}
 
@@ -115,20 +107,20 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	claims := pkg.NewJWTClaims(infoUser.Id, userCred.Role)
 	jwtToken, err := claims.GenToken()
 	if err != nil {
-		log.Println("Internal Server Error.\nCause: ", err.Error())
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"success": false,
-			"error":   "internal server error",
-		})
+		utils.HandleError(ctx, http.StatusInternalServerError, "internal server error", err.Error())
 		return
 	}
 
-	utils.HandleResponse(ctx, http.StatusOK, models.SuccessResponse{
+	loginData := models.SuccessLoginData{
+		Role:  claims.Role,
+		Token: jwtToken,
+	}
+
+	response := models.SuccessResponse{
 		Success: true,
 		Status:  http.StatusOK,
-		Data: models.SuccessLoginResponse{
-			Role:  userCred.Role,
-			Token: jwtToken,
-		},
-	})
+		Data:    loginData,
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }
