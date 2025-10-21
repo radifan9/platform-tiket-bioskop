@@ -12,7 +12,7 @@ type ErrorResponse struct {
 	Error   string `json:"error" example:"error message"`
 }
 
-type SuccessLoginResponse struct {
+type SuccessLoginData struct {
 	Role  string `json:"role"`
 	Token string `json:"token"`
 }
